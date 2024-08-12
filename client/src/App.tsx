@@ -10,7 +10,7 @@ import Grammar from "./Components/Grammar";
 
 function App() {
   //Get parametes from URL
-  const params = window.location.href.replace("http://localhost:3000/", "").split("/");
+  const params = window.location.href.replace("https://golive1-2.onrender.com/", "").split("/");
   console.log(params);
 
   try{

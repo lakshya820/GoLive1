@@ -100,7 +100,7 @@ const VoiceTest: React.FC = () => {
     //if(!isDisconnect){
       //console.log(`Connection method :`,connection);
       connection?.disconnect();
-      const socket = io.connect("http://localhost:8081");
+      const socket = io.connect("https://golive1-1.onrender.com");
       socket.on("connect", () => {
         setConnection(socket);
       });
@@ -139,7 +139,7 @@ const VoiceTest: React.FC = () => {
     setIsRecording(false);
     //setIsDisconnect(true);
 
-    const socket = io.connect("http://localhost:8081");
+    const socket = io.connect("https://golive1-1.onrender.com");
 
     socket.on("showgrammar", () =>{
       navigate('/exam/grammar');

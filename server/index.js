@@ -32,7 +32,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://golive1-2.onrender.com",
     methods: ["GET", "POST"],
   },
 });
@@ -185,9 +185,9 @@ async function grammarcorrection(grammarArray) {
   return correctedGrammarArray;
 }
 
-
-server.listen(8081, () => {
-  console.log("WebSocket server listening on port 8081.");
+const port = process.env.PORT || 8081;
+server.listen(port, () => {
+  console.log("WebSocket server listening on port ${port}.");
 });
 
 // =========================== GOOGLE CLOUD SETTINGS ================================ //
