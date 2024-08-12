@@ -14,7 +14,7 @@ function unzip(buffer_string){
   return new TextDecoder().decode(ungzipedData);
 }
 
-const socket = io.connect('http://localhost:8081'); 
+const socket = io.connect('https://golive1-1.onrender.com'); 
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_AWS_LEX_CLIENTID,

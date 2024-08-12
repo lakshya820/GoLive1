@@ -1,6 +1,7 @@
 import * as io from "socket.io-client";
 import { default as React, useState } from "react";
 import Header from "./Header";
+import '../css/Grammar.css';
 
 const Grammar: React.FC = () => {
     const [grammarCorrectionResult, setGrammarCorrectionResult] = useState<string[]>([]);
@@ -16,7 +17,7 @@ const Grammar: React.FC = () => {
 
     return (
         <React.Fragment>
-            <div>
+            <div className="grammar">
               <Header></Header>
             <h5>Grammar Suggestion:</h5>
             {grammarCorrectionResult.map((result, index) => (
