@@ -1,6 +1,7 @@
 console.log("from server side");
 const express = require("express");
 const speech = require("@google-cloud/speech");
+const path = require('path');
 
 require('dotenv').config();
 
@@ -20,6 +21,12 @@ const http = require("http");
 const { Server } = require("socket.io");
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 let answers;
 
