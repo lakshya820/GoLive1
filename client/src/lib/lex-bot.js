@@ -92,9 +92,11 @@ export default function getLexResponse(_inputStream, _requestContentType){
 
             socket.emit("lexanswers", answer);
 
-            socket.emit("showgrammar");
+            //socket.emit("showgrammar");
 
-            window.location.href = '/grammar';
+            document.getElementById('grammar_redirect')?.click();
+
+            //window.location.href = '/grammar';
           }
           //document.getElementById('start_rec')?.click();
         });

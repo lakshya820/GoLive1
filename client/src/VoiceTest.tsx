@@ -234,6 +234,12 @@ const VoiceTest: React.FC = () => {
   const handleButtonClear = (()=>{
     setTextAreaValue("");
   });
+
+  const handleShowingGrammar= () => {
+    
+    navigate('/grammar');
+  };
+
   return (
     <React.Fragment>
       <Container className="py-5 text-center">
@@ -254,6 +260,10 @@ const VoiceTest: React.FC = () => {
                 className="btn-outline-light"
                 onClick={disconnect}
                 disabled={!isRecording}></Button>
+                                 <Button
+                id = "grammar_redirect" 
+                onClick={handleShowingGrammar}
+                ></Button>
             </div>
           </Container>
         </Container>
