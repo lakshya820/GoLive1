@@ -37,10 +37,10 @@ function App() {
     return (
       <Router>
       <Routes>
-        <Route path="/" element={<Tests1 />} />
+      <Route path="/" element={<Tests1 />} />
+        <Route path="/grammar" element={<Grammar />} />
         <Route path="/exam" element={<ExamLayout />}>
           <Route path="voicetest" element={<VoiceTest />} />
-          <Route path="grammar" element={<Grammar />} />
         </Route>
       </Routes>
     </Router> 
