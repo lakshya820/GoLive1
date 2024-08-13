@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 100vw;
+    padding-top: 80px;
 }
 
 .grammar_content {
