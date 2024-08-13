@@ -22,11 +22,7 @@ const { Server } = require("socket.io");
 const app = express();
 
 let answers;
-let count=0;
-let total;
-let correctedGrammarArray = [];
-let correct = [];
-let incorrect = [];
+
 
 app.use(cors());
 app.use(logger("dev"));
@@ -148,7 +144,15 @@ io.on("connection", (socket) => {
 
 
 async function grammarcorrection(grammarArray) {
-   // Split sentences and create a new array of sentences
+   
+   // Initialize arrays for each function call
+   let correctedGrammarArray = [];
+   let correct = [];
+   let incorrect = [];
+   let count = 0;
+   let total;
+  
+  // Split sentences and create a new array of sentences
    const sentences = grammarArray.flatMap(text =>
     text.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "")
   );
