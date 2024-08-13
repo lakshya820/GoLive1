@@ -3,14 +3,19 @@ import { default as React, useState } from "react";
 import Header from "./Header";
 import '../css/Grammar.css';
 
+interface GrammarCorrectionResult {
+  correct: string[];
+  incorrect: string[];
+  total: number;
+}
+
 const Grammar: React.FC = () => {
-    const [grammarCorrectionResult, setGrammarCorrectionResult] = useState<string[]>([]);
+  const [grammarCorrectionResult, setGrammarCorrectionResult] = useState<GrammarCorrectionResult | null>(null);
 
+    const socket = io.connect("http://localhost:8081");
 
-    const socket = io.connect("https://golive1-1.onrender.com");
-
-
-    socket.on("grammarCorrectionResult", (data) => {
+  
+    socket.on("grammarCorrectionResult", (data: GrammarCorrectionResult) => {
       setGrammarCorrectionResult(data);
       console.log('grammaresult:', data);
     });
@@ -19,10 +24,27 @@ const Grammar: React.FC = () => {
         <React.Fragment>
             <div className="grammar">
               <Header></Header>
-            <h5>Grammar Suggestion:</h5>
-            {grammarCorrectionResult.map((result, index) => (
-              <p key={index}>{result}</p>
-            ))}
+              {grammarCorrectionResult && (
+                <div className="grammar_content">
+                  <table className="grammar_table">
+                    <thead>
+                      <tr>
+                        <th>Original Statements</th>
+                        <th>Corrected Statements</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {grammarCorrectionResult.correct.map((correctStatement, index) => (
+                        <tr key={index}>
+                          <td>{grammarCorrectionResult.incorrect[index]}</td>
+                          <td>{correctStatement}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <p>Total Correct Percentage: {grammarCorrectionResult.total.toFixed(2)}%</p>
+                </div>
+              )}
           </div>
         </React.Fragment>
     );
