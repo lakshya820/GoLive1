@@ -12,7 +12,7 @@ interface GrammarCorrectionResult {
 const Grammar: React.FC = () => {
   const [grammarCorrectionResult, setGrammarCorrectionResult] = useState<GrammarCorrectionResult | null>(null);
 
-    const socket = io.connect("http://localhost:8081");
+    const socket = io.connect("https://golive1-1.onrender.com");
 
   
     socket.on("grammarCorrectionResult", (data: GrammarCorrectionResult) => {

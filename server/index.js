@@ -37,7 +37,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://golive1-2.onrender.com",
     methods: ["GET", "POST"],
   },
 });
@@ -79,7 +79,6 @@ io.on("connection", (socket) => {
     answers=data;
     if(answers !== null){
       grammarCorrectionResult = await grammarcorrection(answers);
-      console.log("grammarReceived", grammarCorrectionResult);
       io.emit("grammarCorrectionResult", grammarCorrectionResult);
     }
   });
@@ -149,8 +148,8 @@ io.on("connection", (socket) => {
 
 
 async function grammarcorrection(grammarArray) {
-  // Split sentences and create a new array of sentences
-  const sentences = grammarArray.flatMap(text =>
+   // Split sentences and create a new array of sentences
+   const sentences = grammarArray.flatMap(text =>
     text.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "")
   );
   
@@ -199,9 +198,9 @@ async function grammarcorrection(grammarArray) {
   }
 
   total=(1-(count/(sentences.length)))*100;
-  console.log("counr:", count);
-  console.log("length:", grammarArray.length);
-  console.log("total:", total);
+  // console.log("counr:", count);
+  // console.log("length:", grammarArray.length);
+  // console.log("total:", total);
   // Return the array of corrected results
   return {
     correct,
@@ -210,9 +209,9 @@ async function grammarcorrection(grammarArray) {
   };
 }
 
-
-server.listen(8081, () => {
-  console.log("WebSocket server listening on port 8081.");
+const port = process.env.PORT || 8081;
+server.listen(port, () => {
+  console.log("WebSocket server listening on port ${port}.");
 });
 
 // =========================== GOOGLE CLOUD SETTINGS ================================ //
