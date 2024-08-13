@@ -29,13 +29,13 @@ const Tests1: React.FC = () => {
                 </div>
                 <div className="tests1_card">
                     <div className="card_header">
-                    <p>Empathy</p>
+                    <p>Grammar Test</p>
                     </div>
                     <div className="card_label1">
                             <p>This test is focused to teach learners how to empathize with users, when they are upset because of the issue they are facing.</p>
                     </div>
                     <div className="card_label2">
-                            <p> Date: 08/12/2022        Time: 12:00         Duration: 15 mins</p>
+                            <p> Duration: 20 mins</p>
                     </div>
                     <div className="card_buttons">
                             
