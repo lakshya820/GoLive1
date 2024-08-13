@@ -2,9 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/logo192.png" />
+    <link id="favicon" rel="icon" href="%PUBLIC_URL%/logo192-light.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
+    <script>
+      // Function to update the favicon based on the theme
+      function updateFavicon() {
+        const favicon = document.getElementById('favicon');
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Change the favicon based on the theme
+        favicon.href = isDarkMode ? 'logo192-dark.png' : 'logo192-light.png';
+      }
+  
+      // Update the favicon on initial load
+      document.addEventListener('DOMContentLoaded', updateFavicon);
+  
+      // Update the favicon when the theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
+    </script>
     <meta
       name="description"
       content="Web site created using create-react-app"
