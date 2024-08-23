@@ -175,7 +175,7 @@ async function grammarcorrection(grammarArray, questions) {
               messages: [
                   {
                       role: "system",
-                      content: "You will be provided with statements, and your task is to convert them to standard English."
+                      content: "You will be provided with statements, and your task is to convert them to gramatically correct statements."
                   },
                   {
                       role: "user",
