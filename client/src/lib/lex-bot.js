@@ -2,6 +2,7 @@ import AWS from 'aws-sdk';
 import { ungzip } from 'pako';
 import { Buffer } from 'buffer';
 import * as io from "socket.io-client";
+import { useNavigate } from 'react-router-dom';
 
 function unzip(buffer_string){
   // decode the base64 encoded data
@@ -14,7 +15,8 @@ function unzip(buffer_string){
   return new TextDecoder().decode(ungzipedData);
 }
 
-const socket = io.connect('https://golive1-1.onrender.com'); 
+const socket = io.connect('http://localhost:8081'); 
+//const navigate = useNavigate();
 
 AWS.config.update({
   accessKeyId: process.env.REACT_APP_AWS_LEX_CLIENTID,
@@ -50,6 +52,7 @@ export default function getLexResponse(_inputStream, _requestContentType){
   let answer = [];
   lex_params.inputStream = _inputStream;
   lex_params.requestContentType=_requestContentType;
+  let questionList=[];
 
   console.log("start call to lex.")
   lexV2Client.recognizeUtterance(lex_params, async function(err, data){
@@ -79,24 +82,33 @@ export default function getLexResponse(_inputStream, _requestContentType){
         let disp_ques = document.getElementById('ques-disp');
         disp_ques.textContent = question;
 
+        //console.log(json_session_state["sessionAttributes"]['Question_1']);
+
         //body_css.style.backgroundImage = "url('./images/speeking.gif')";
         audio_player.addEventListener("ended", function(){
           if(json_session_state['intent']['state'] == "Fulfilled"){
 
+            
             var slots = json_session_state['intent']['slots'];
             for(let i=1; i<=Object.keys(slots).length; i++){
               answer[i-1]=slots['Question_'+i]['value']['originalValue'];
+              questionList[i-1]=json_session_state["sessionAttributes"]['Question_'+i];
             }
             console.log(answer);
+            console.log(questionList);
             sessionStorage.setItem('lex_answers', answer);
 
-            socket.emit("lexanswers", answer);
+            socket.emit("lexanswers", answer, questionList);
+
+            socket.emit("lexquestions", questionList);
 
             //socket.emit("showgrammar");
 
             document.getElementById('grammar_redirect')?.click();
 
-            //window.location.href = '/grammar';
+            //navigate('/grammar');
+
+           // window.location.href = '/grammar';
           }
           //document.getElementById('start_rec')?.click();
         });

@@ -22,7 +22,12 @@ const { Server } = require("socket.io");
 const app = express();
 
 let answers;
-
+let questions;
+let count=0;
+let total;
+let correctedGrammarArray = [];
+let correct = [];
+let incorrect = [];
 
 app.use(cors());
 app.use(logger("dev"));
@@ -33,7 +38,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://golive1-2.onrender.com",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -73,11 +78,26 @@ io.on("connection", (socket) => {
   socket.on('lexanswers', async (data) => {
     console.log('Received answers from Lex:', data);
     answers=data;
-    if(answers !== null){
-      grammarCorrectionResult = await grammarcorrection(answers);
-      io.emit("grammarCorrectionResult", grammarCorrectionResult);
-    }
+
+    socket.on('lexquestions',async (data) => {
+      console.log('Received questions from Lex:', data);
+      questions=data;
+      if(questions !== null){
+        
+        grammarCorrectionResult = await grammarcorrection(answers, questions);
+        console.log("grammarReceived", grammarCorrectionResult);
+        io.emit("grammarCorrectionResult", grammarCorrectionResult);
+        //io.emit("questions", questions);
+
+      }
+    });
+
+    // if(answers !== null){
+     
+    // }
   });
+
+  
 
   // socket.on("sendanswers", async () => {
     
@@ -143,34 +163,24 @@ io.on("connection", (socket) => {
 
 
 
-async function grammarcorrection(grammarArray) {
-   
-   // Initialize arrays for each function call
-   let correctedGrammarArray = [];
-   let correct = [];
-   let incorrect = [];
-   let count = 0;
-   let total;
-  
+async function grammarcorrection(grammarArray, questions) {
   // Split sentences and create a new array of sentences
-   const sentences = grammarArray.flatMap(text =>
-    text.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "")
-  );
+  const sentences = grammarArray;
   
-  console.log("sentences: ", sentences);
+  //console.log("sentences: ", sentences);
   try {
       // Iterate over each string in the grammarArray
-      for (const sentence of sentences) {
+      for (const grammar of grammarArray) {
           const completion = await openai.chat.completions.create({
               model: "gpt-3.5-turbo",
               messages: [
                   {
                       role: "system",
-                      content: "You will be provided with statements, and your task is to convert them to standard English."
+                      content: "You will be provided with statements, and your task is to convert them to gramatically correct statements."
                   },
                   {
                       role: "user",
-                      content: sentence
+                      content: grammar
                   }
               ],
               temperature: 0,
@@ -182,15 +192,27 @@ async function grammarcorrection(grammarArray) {
 
           const grammarResult = completion.choices[0].message.content;
           //console.log("grammarresult_backend", grammarResult);
+          const originalSentences = grammar.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "");
+          const correctedSentences = grammarResult.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "");
 
           // Push the corrected result into the array
           correctedGrammarArray.push(grammarResult);
       }
 
+      const incorrect = grammarArray.flatMap(text =>
+        text.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "")
+      );
+      console.log("incorrect: ", incorrect);
+
+      const correct = correctedGrammarArray.flatMap(text =>
+        text.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "")
+      );
+      console.log("correct: ", correct);
+
       for (let i = 0; i < sentences.length; i++) {
         if(sentences[i] !== correctedGrammarArray[i]){
-          incorrect.push(sentences[i]);
-          correct.push(correctedGrammarArray[i]);
+          // incorrect.push(sentences[i]);
+          // correct.push(correctedGrammarArray[i]);
           count++;
         }
       }
@@ -207,15 +229,16 @@ async function grammarcorrection(grammarArray) {
   // console.log("total:", total);
   // Return the array of corrected results
   return {
-    correct,
-    incorrect,
-    total,
+    questions,
+    grammarArray,
+    correctedGrammarArray,
+    total
   };
 }
 
-const port = process.env.PORT || 8081;
-server.listen(port, () => {
-  console.log("WebSocket server listening on port ${port}.");
+
+server.listen(8081, () => {
+  console.log("WebSocket server listening on port 8081.");
 });
 
 // =========================== GOOGLE CLOUD SETTINGS ================================ //

@@ -111,10 +111,10 @@ const ExamLayout: React.FC = () => {
               <div className='exam-timer'><span id='timer'><Timer onTimerStops={handleOnTimerStops}/></span></div>
               <div className='ques-pnl'>
                 <div className='info-header'>
-                  <span>Empathy</span>
+                  <span>Grammar Test</span>
                 </div>
                 <div className='info-content'>
-                  <span>This test is focused to tech learner how to empathize with users, when they are upset because of the issue they are facing.</span>
+                  <span>Note: Please take 30-40 seconds to think about your answer and then try answering confidently.</span>
                 </div>
                 <div className='ques-no'>        
                   <span id='ques_no'>Question</span>

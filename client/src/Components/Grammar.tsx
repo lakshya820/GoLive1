@@ -4,21 +4,26 @@ import Header from "./Header";
 import '../css/Grammar.css';
 
 interface GrammarCorrectionResult {
-  correct: string[];
-  incorrect: string[];
-  total: number;
+    questions: string[]
+    grammarArray: string[]
+    correctedGrammarArray: string[]
+    total: number
 }
+
 
 const Grammar: React.FC = () => {
   const [grammarCorrectionResult, setGrammarCorrectionResult] = useState<GrammarCorrectionResult | null>(null);
+  const [questionsFromLex, setQuestionsFromLex] = useState<string[]>([]);
 
-    const socket = io.connect("https://golive1-1.onrender.com");
+    const socket = io.connect("http://localhost:8081");
 
   
     socket.on("grammarCorrectionResult", (data: GrammarCorrectionResult) => {
       setGrammarCorrectionResult(data);
       console.log('grammaresult:', data);
     });
+
+    
 
     return (
         <React.Fragment>
@@ -29,17 +34,19 @@ const Grammar: React.FC = () => {
                   <table className="grammar_table">
                     <thead>
                       <tr>
+                        <th>Questions</th>
                         <th>Original Statements</th>
                         <th>Corrected Statements</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {grammarCorrectionResult.correct.map((correctStatement, index) => (
-                        <tr key={index}>
-                          <td>{grammarCorrectionResult.incorrect[index]}</td>
-                          <td>{correctStatement}</td>
-                        </tr>
-                      ))}
+                    {grammarCorrectionResult.questions.map((question, index) => (
+                  <tr key={index}>
+                    <td>{question}</td>
+                    <td>{grammarCorrectionResult.grammarArray[index]}</td>
+                    <td>{grammarCorrectionResult.correctedGrammarArray[index]}</td>
+                  </tr>
+                ))}
                     </tbody>
                   </table>
                   <p>Total Correct Percentage: {grammarCorrectionResult.total.toFixed(2)}%</p>
