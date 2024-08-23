@@ -23,11 +23,7 @@ const app = express();
 
 let answers;
 let questions;
-let count=0;
-let total;
-let correctedGrammarArray = [];
-let correct = [];
-let incorrect = [];
+
 
 app.use(cors());
 app.use(logger("dev"));
@@ -98,11 +94,6 @@ io.on("connection", (socket) => {
   });
 
   
-
-  // socket.on("sendanswers", async () => {
-    
-  // });
-  
   socket.on("send_audio_data", async (audioData) => {
     io.emit("receive_message", "Got audio data");
     if (recognizeStream !== null) {
@@ -164,8 +155,16 @@ io.on("connection", (socket) => {
 
 
 async function grammarcorrection(grammarArray, questions) {
-  // Split sentences and create a new array of sentences
-  const sentences = grammarArray;
+   
+   // Initialize arrays for each function call
+   let correctedGrammarArray = [];
+   let correct = [];
+   let incorrect = [];
+   let count = 0;
+   let total;
+   const sentences = grammarArray;
+  
+  
   
   //console.log("sentences: ", sentences);
   try {
@@ -176,7 +175,7 @@ async function grammarcorrection(grammarArray, questions) {
               messages: [
                   {
                       role: "system",
-                      content: "You will be provided with statements, and your task is to convert them to gramatically correct statements."
+                      content: "You will be provided with statements, and your task is to convert them to standard English."
                   },
                   {
                       role: "user",
@@ -192,8 +191,6 @@ async function grammarcorrection(grammarArray, questions) {
 
           const grammarResult = completion.choices[0].message.content;
           //console.log("grammarresult_backend", grammarResult);
-          const originalSentences = grammar.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "");
-          const correctedSentences = grammarResult.split(/(?<=\.)\s*/).filter(sentence => sentence.trim() !== "");
 
           // Push the corrected result into the array
           correctedGrammarArray.push(grammarResult);
@@ -236,9 +233,9 @@ async function grammarcorrection(grammarArray, questions) {
   };
 }
 
-
-server.listen(8081, () => {
-  console.log("WebSocket server listening on port 8081.");
+const port = process.env.PORT || 8081;
+server.listen(port, () => {
+  console.log("WebSocket server listening on port ${port}.");
 });
 
 // =========================== GOOGLE CLOUD SETTINGS ================================ //

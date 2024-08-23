@@ -4,16 +4,14 @@ import Header from "./Header";
 import '../css/Grammar.css';
 
 interface GrammarCorrectionResult {
-    questions: string[]
-    grammarArray: string[]
-    correctedGrammarArray: string[]
-    total: number
+  questions: string[]
+  grammarArray: string[]
+  correctedGrammarArray: string[]
+  total: number
 }
-
 
 const Grammar: React.FC = () => {
   const [grammarCorrectionResult, setGrammarCorrectionResult] = useState<GrammarCorrectionResult | null>(null);
-  const [questionsFromLex, setQuestionsFromLex] = useState<string[]>([]);
 
     const socket = io.connect("https://golive1-1.onrender.com");
 
@@ -22,8 +20,6 @@ const Grammar: React.FC = () => {
       setGrammarCorrectionResult(data);
       console.log('grammaresult:', data);
     });
-
-    
 
     return (
         <React.Fragment>
